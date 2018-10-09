@@ -13,7 +13,8 @@ Currently supports US & Canada Area Codes and all Country Codes.
 install with npm:
 
 ```
-$ npm install timezone_info
+$ npm install phone-number-to-timezone
+
 ```
 
 ## Examples

@@ -2,7 +2,7 @@
 
 phone-number-to-timezone is a utility that helps to get the current time and location for a phone number, area code, or country code.
 
-We have used Chronomouse client-side js library to make it available at server side too
+We have used Chronomouse client-side js library to make it available at server side too.
 
 Get information such as the current time, GMT offset time zone name, location, the capital city, daylight savings laws, or daylight savings status.
 

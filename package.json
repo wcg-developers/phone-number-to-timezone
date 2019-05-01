@@ -1,6 +1,6 @@
 {
   "name": "timezone_info",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Get details about area,timezone,etc based on number, we have used https://www.chronomouse.com/ client side js library to make it available at server side too",
   "main": "index.js",
   "scripts": {

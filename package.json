@@ -1,11 +1,15 @@
 {
-  "name": "timezone_info",
-  "version": "1.0.4",
+  "name": "phone-number-to-timezone",
+  "version": "1.0.5",
   "description": "Get details about area,timezone,etc based on number, we have used https://www.chronomouse.com/ client side js library to make it available at server side too",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Keyur Chavda",
-  "license": "MIT"
+  "author": "WebCodeGenie",
+  "license": "MIT",
+  "repository": {
+  	"type": "git",
+  	"url": "https://github.com/wcg-developers/phone-number-to-timezone.git"
+  }
 }

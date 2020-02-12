@@ -134,7 +134,7 @@ var self = module.exports = {
 			}
 		case "country":
 			{
-				object['country_info'] = getCountryInfo(object);
+				object['country_info'] = self.getCountryInfo(object);
 				location = object['country_info']['name'];
 				while (!location && text.length > 2) {
 					text = text.substring(0, text.length - 1);

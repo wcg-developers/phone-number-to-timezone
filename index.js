@@ -250,10 +250,9 @@ var self = module.exports = {
 			var time2 = self.formatTime(hour2, mins, offset[0], military);
 			object['time']['hour2'] = time2.hour;
 			object['time']['meridian2'] = time2.meridian;
+			var meridian2 = "";
 			if (object['time']['meridian2']) {
-				var meridian2 = " " + time2.meridian;
-			} else {
-				var meridian2 = "";
+				meridian2 = " " + time2.meridian;
 			}
 			object['time']['display2'] = time2.hour.toString() + ":" + time.mins.toString() + meridian2;
 			//Format Zone Display
@@ -348,6 +347,7 @@ var self = module.exports = {
 		var count = 0;
 		var result = new Date(date.getFullYear(), date.getMonth(), 1);
 		while (true) {
+			// If statement added to stop infinite loop for certain numbers in middle east
 			if (typeof weekday !== 'number' || isNaN(weekday)) {
 				break;
 			}

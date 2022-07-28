@@ -277,6 +277,8 @@ var self = module.exports = {
 		} else {
 			meridian = "";
 		}
+		object['country_info']['offset'] = offset + dst
+		object['offset'] = offset + dst
 		object['time']['display'] = time.hour.toString() + ":" + time.mins.toString() + meridian;
 	},
 	checkDst: function (object) {

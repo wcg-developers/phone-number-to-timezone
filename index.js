@@ -320,12 +320,12 @@ var self = module.exports = {
 	nthWeekdayOfMonth: function (weekday, n, date) {
 		var count = 0;
 		var result = new Date(date.getFullYear(), date.getMonth(), 1);
-		while (true) {
-			if (result.getDay() === weekday) {
-				if (++count == n) {
-					break;
-				}
-			}
+		while ((result.getDay() === weekday) && (++count != n)) {
+			// if (result.getDay() === weekday) {
+			// 	// if (++count == n) {
+			// 	// 	break;
+			// 	// }
+			// }
 			result.setDate(result.getDate() + 1);
 		}
 		return result;

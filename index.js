@@ -61,9 +61,9 @@ var self = module.exports = {
 		}
 		var submittedOptions = Object.keys(options);
 		var availableOptions = ['military', 'format', 'zone_display'];
-		for (i = 0; i < submittedOptions.length; i++) {
+		for (let i = 0; i < submittedOptions.length; i++) {
 			var valid = false;
-			for (x = 0; x < availableOptions.length; x++) {
+			for (let x = 0; x < availableOptions.length; x++) {
 				if (submittedOptions[i] == availableOptions[x]) {
 					valid = true;
 					break;
@@ -155,8 +155,8 @@ var self = module.exports = {
 		var text = object['text'];
 		var location = false;
 		var zone_display_key = object['options']['zone_display'];
-		for (i = 0; i < usCodes.length - 1; i++) {
-			for (x = 0; x < usCodes[i]['codes'].length; x++) {
+		for (let i = 0; i < usCodes.length - 1; i++) {
+			for (let x = 0; x < usCodes[i]['codes'].length; x++) {
 				if (text === usCodes[i]['codes'][x]) {
 					var location = usCodes[i]['codes'][x + 1];
 					object['time']['zone'] = usCodes[i][zone_display_key];
@@ -170,7 +170,7 @@ var self = module.exports = {
 			return location;
 		}
 		var tollFree = usCodes[usCodes.length - 1];
-		for (i = 0; i < tollFree['codes'].length; i++) {
+		for (let i = 0; i < tollFree['codes'].length; i++) {
 			if (text === tollFree['codes'][i]) {
 				var location = 'Toll Free or Other';
 				object['time']['zone'] = "Toll Free or Other";
@@ -188,7 +188,7 @@ var self = module.exports = {
 			text: '+1'
 		}).index;
 		object['country_info'] = countryCodes[usIndex + 1];
-		for (i = 0; i < canadaCodes.length; i++) {
+		for (let i = 0; i < canadaCodes.length; i++) {
 			if (code === canadaCodes[i]) {
 				object['country_info'] = countryCodes[usIndex + 2];
 				break;
@@ -201,7 +201,7 @@ var self = module.exports = {
 		var code = text.substring(1, text.length);
 		var country_info = [];
 		var countryIndex = false;
-		for (i = 0; i < countryCodes.length; i++) {
+		for (let i = 0; i < countryCodes.length; i++) {
 			if (code === countryCodes[i]['code']) {
 				var country_info = countryCodes[i];
 				object['offset'] = countryCodes[i]['offset'];
@@ -250,10 +250,9 @@ var self = module.exports = {
 			var time2 = self.formatTime(hour2, mins, offset[0], military);
 			object['time']['hour2'] = time2.hour;
 			object['time']['meridian2'] = time2.meridian;
+			var meridian2 = "";
 			if (object['time']['meridian2']) {
 				meridian2 = " " + time2.meridian;
-			} else {
-				meridian2 = "";
 			}
 			object['time']['display2'] = time2.hour.toString() + ":" + time.mins.toString() + meridian2;
 			//Format Zone Display
@@ -272,13 +271,12 @@ var self = module.exports = {
 		object['time']['hour'] = time.hour;
 		object['time']['mins'] = time.mins;
 		object['time']['meridian'] = time.meridian;
+		let meridian;
 		if (object['time']['meridian']) {
 			meridian = " " + time.meridian;
 		} else {
 			meridian = "";
 		}
-		object['country_info']['offset'] = offset + dst
-		object['offset'] = offset + dst
 		object['time']['display'] = time.hour.toString() + ":" + time.mins.toString() + meridian;
 	},
 	checkDst: function (object) {
@@ -310,22 +308,54 @@ var self = module.exports = {
 				dst = true;
 			}
 		} else {
-			if (date < startDate || date >= endDate) {
-				dst = true;
+			// Important:: Original code had an issue with the case where
+			// current date was greater than the middle of the year and  
+			// the end of dst was in the next year.
+			// Example:: set current date to 06/15/2022 and test with Australia number
+
+			// In the case where end month is within the same year.
+			if (end_month > start_month) {
+				if (date < startDate || date >= endDate) {
+					dst = true;
+				}
+			} else {
+				// In the case where start month is less than the end month which means it is in the next year
+				if (date > startDate || date <= endDate) {
+					dst = true;
+				}
 			}
+
 		}
+
+		object['dstStartDate'] = `${startDate.toISOString()}`;
+		object['dstEndDate'] = `${endDate.toISOString()}`;
+
+		if (endDate < startDate) {
+			if (date < middleOfYear) {
+
+				object['dstStartDate'] = self.nthWeekdayOfMonth(start_day, start_week, new Date(year - 1, start_month)).toISOString();
+			} else {
+				object['dstEndDate'] = self.nthWeekdayOfMonth(end_day, end_week, new Date(year + 1, end_month)).toISOString();
+			}
+
+		}
+
 		object['dstnow'] = dst;
 		return dst;
 	},
 	nthWeekdayOfMonth: function (weekday, n, date) {
 		var count = 0;
 		var result = new Date(date.getFullYear(), date.getMonth(), 1);
-		while ((result.getDay() === weekday) && (++count != n)) {
-			// if (result.getDay() === weekday) {
-			// 	// if (++count == n) {
-			// 	// 	break;
-			// 	// }
-			// }
+		while (true) {
+			// If statement added to stop infinite loop for certain numbers in middle east
+			if (typeof weekday !== 'number' || isNaN(weekday)) {
+				break;
+			}
+			if (result.getDay() === weekday) {
+				if (++count == n) {
+					break;
+				}
+			}
 			result.setDate(result.getDate() + 1);
 		}
 		return result;
@@ -350,7 +380,7 @@ var self = module.exports = {
 			partialOffset *= (-1);
 		}
 		if (partialOffset > 0) {
-			offsetMinutes = partialOffset * 60;
+			let offsetMinutes = partialOffset * 60;
 			mins = mins + offsetMinutes;
 			hour = hour - partialOffset;
 		}
